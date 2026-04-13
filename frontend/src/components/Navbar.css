@@ -1,0 +1,48 @@
+.navbar {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 90%;
+  max-width: 420px; /* slightly increased for 5 icons */
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+
+  border-radius: 20px;
+  padding: 12px 18px;
+
+  display: flex;
+
+  /* 🔥 IMPORTANT FIX */
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+/* Icons */
+.navbar p {
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+/* Active tab */
+.navbar p.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Hover effect */
+.navbar p:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Logout styling */
+.navbar .logout {
+  color: #f87171;
+}

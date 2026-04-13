@@ -1,0 +1,176 @@
+/* TITLE */
+.page-title {
+  font-size: 28px;
+  text-align: center;
+  margin: 20px 0;
+  font-weight: 600;
+}
+
+/* GLASS EFFECT */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* PROFILE CARD */
+.profile-card {
+  margin: 0 15px 20px;
+  padding: 18px;
+  border-radius: 15px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LEFT */
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* AVATAR */
+.avatar {
+  font-size: 32px;
+}
+
+/* TEXT */
+.username {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.email {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* EDIT */
+.edit-btn {
+  background: #3b82f6;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+/* EDIT ROW */
+.edit-row {
+  display: flex;
+  gap: 6px;
+}
+
+.edit-row input {
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+}
+
+.edit-row button {
+  background: #22c55e;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: white;
+}
+
+/* SAVINGS CARD */
+.savings-card {
+  margin: 0 15px 20px;
+  padding: 20px;
+  border-radius: 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: linear-gradient(135deg, #2563eb, #9333ea);
+  color: white;
+}
+
+/* INPUT */
+.savings-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.savings-input input {
+  width: 100px;
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+}
+
+.savings-input button {
+  background: #22c55e;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+/* GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 0 15px 80px; /* 👈 space for navbar */
+}
+
+/* CARDS */
+.card {
+  height: 120px;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+
+  /* 🔥 FIX OVERLAP ISSUE */
+  position: relative;
+  z-index: 1;
+}
+
+/* TEXT INSIDE CARDS */
+.card p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.card h3 {
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+/* HOVER */
+.hover:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
+}
+
+/* COLORS */
+.income {
+  border-bottom: 3px solid #22c55e;
+}
+
+.expense {
+  border-bottom: 3px solid #ef4444;
+}
+
+.balance {
+  border-bottom: 3px solid #3b82f6;
+}
+
+.budget {
+  border-bottom: 3px solid #a855f7;
+}

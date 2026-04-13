@@ -1,0 +1,118 @@
+.transactions-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1e293b, #0f172a);
+  color: white;
+  padding: 20px;
+  padding-bottom: 100px;
+}
+
+/* 🔥 HEADER ROW */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Title */
+.heading {
+  margin: 0;
+}
+
+/* FILTER */
+.filter-wrapper {
+  position: relative;
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* COLORS */
+.filter-btn.all {
+  background: #334155;
+  color: white;
+}
+
+.filter-btn.income {
+  background: #22c55e;
+  color: white;
+}
+
+.filter-btn.expense {
+  background: #ef4444;
+  color: white;
+}
+
+/* Dropdown */
+.filter-dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 10px;
+  width: 120px;
+  z-index: 10;
+}
+
+.filter-dropdown p {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.filter-dropdown p:hover {
+  background: #334155;
+  border-radius: 6px;
+}
+
+/* Card */
+.transaction-card {
+  background: #334155;
+  margin: 12px 0;
+  padding: 15px;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LEFT */
+.left h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* COLORS */
+.green {
+  color: #4ade80;
+  font-weight: bold;
+}
+
+.red {
+  color: #f87171;
+  font-weight: bold;
+}
+
+.category {
+  color: #94a3b8;
+}
+
+/* DELETE BUTTON */
+.right button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.right button:hover {
+  background: #dc2626;
+}
