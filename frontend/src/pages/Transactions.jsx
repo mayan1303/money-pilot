@@ -12,25 +12,49 @@ const Transactions = () => {
     fetchData();
   }, []);
 
+  // 🔥 FETCH USER DATA
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const res = await API.get(`/transactions?userId=${user._id}`);
+
+      if (!user) return;
+
+      const res = await API.get("/transactions", {
+        params: { userId: user._id },
+      });
+
       setTransactions(res.data);
     } catch (error) {
-      console.error(error);
+      console.error("Fetch Error:", error);
     }
   };
 
+  // 🔥 FIXED DELETE FUNCTION (CLEAN)
   const handleDelete = async (id) => {
     try {
-      await API.delete(`/transactions/${id}`);
-      fetchData();
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) {
+        alert("User not found ❌");
+        return;
+      }
+
+      await API.delete(`/transactions/${id}`, {
+        params: { userId: user._id },
+      });
+
+      // ✅ Instant UI update
+      setTransactions((prev) =>
+        prev.filter((t) => t._id !== id)
+      );
+
     } catch (error) {
-      console.error(error);
+      console.error("Delete Error:", error.response?.data || error.message);
+      alert("Delete failed ❌");
     }
   };
 
+  // 🔥 FILTER
   const filtered =
     filter === "all"
       ? transactions
@@ -51,7 +75,7 @@ const Transactions = () => {
   return (
     <div className="transactions-container">
 
-      {/* 🔥 HEADER ROW */}
+      {/* HEADER */}
       <div className="header-row">
         <h1 className="heading">📄 Transactions</h1>
 

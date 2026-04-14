@@ -5,6 +5,7 @@ export const addTransaction = async (req, res) => {
   try {
     const { title, amount, category, type, userId } = req.body;
 
+    // 🔥 VALIDATION
     if (!title || !amount || !category || !type || !userId) {
       return res.status(400).json({ message: "All fields required" });
     }
@@ -25,11 +26,13 @@ export const addTransaction = async (req, res) => {
   }
 };
 
-// 📜 Get Transactions
+
+// 📜 Get Transactions (USER-SPECIFIC)
 export const getTransactions = async (req, res) => {
   try {
     const { userId } = req.query;
 
+    // 🔥 IMPORTANT CHECK
     if (!userId) {
       return res.status(400).json({ message: "User ID missing" });
     }
@@ -44,26 +47,36 @@ export const getTransactions = async (req, res) => {
   }
 };
 
-// ❌ Delete Transaction (FINAL FIX)
+
+// ❌ Delete Transaction (FULLY FIXED)
 export const deleteTransaction = async (req, res) => {
   try {
     const { userId } = req.query;
 
+    // 🔥 STEP 1: CHECK USER ID
+    if (!userId) {
+      return res.status(400).json({ message: "User ID missing" });
+    }
+
+    // 🔥 STEP 2: FIND TRANSACTION
     const transaction = await Transaction.findById(req.params.id);
 
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
 
-    if (transaction.user.toString() !== userId) {
+    // 🔥 STEP 3: OWNER VALIDATION (IMPORTANT FIX)
+    if (transaction.user.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
-    await transaction.deleteOne();
+    // 🔥 STEP 4: DELETE
+    await Transaction.findByIdAndDelete(req.params.id);
 
-    res.json({ message: "Deleted successfully" });
+    res.json({ message: "Transaction deleted successfully" });
 
   } catch (error) {
+    console.error("Delete Error:", error);
     res.status(500).json({ message: error.message });
   }
 };

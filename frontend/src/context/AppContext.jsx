@@ -10,19 +10,29 @@ export const AppProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // ✅ CORRECT: NO userId in URL
   const fetchUser = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) return;
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      const res = await API.get("/user"); // 🔥 FIXED
+    if (!user || !user._id) return;
 
-      setSavings(res.data.savings || 0);
-    } catch (err) {
-      console.log("Fetch User Error:", err);
+    const res = await API.get("/user");
+setSavings(res.data.savings || 0);
+
+    // 🔥 Important fallback fix
+    if (res.data && res.data.savings !== undefined) {
+      setSavings(res.data.savings);
+    } else {
+      setSavings(0);
     }
-  };
+
+  } catch (err) {
+    console.error("Fetch User Error:", err);
+
+    // ❌ DO NOT reset to 0 on error (this was your bug)
+    // keep previous savings instead
+  }
+};
 
   // ✅ CORRECT: NO userId needed
   const updateSavings = async (value) => {

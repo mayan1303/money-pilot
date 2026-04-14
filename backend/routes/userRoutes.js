@@ -1,14 +1,30 @@
 import express from "express";
-import { getUser, updateBudget, updateUser } from "../controllers/userController.js";
+import {
+  getUser,
+  updateBudget,
+  updateUser,
+} from "../controllers/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// 🔐 PROTECTED ROUTES
+// 🔐 GET LOGGED-IN USER (from token)
 router.get("/", protect, getUser);
+
+// 🔥 NEW: GET USER BY ID (VERY IMPORTANT FIX)
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await (await import("../models/User.js")).default.findById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 🔐 UPDATE SAVINGS
 router.put("/budget", protect, updateBudget);
 
-// 🔥 NEW: UPDATE USERNAME
+// 🔐 UPDATE USERNAME
 router.put("/update", protect, updateUser);
 
 export default router;
