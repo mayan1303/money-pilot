@@ -14,28 +14,26 @@ const Home = () => {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
-  // 🔥 RUN WHEN USER CHANGES
+  // ✅ RUN ON PAGE LOAD
   useEffect(() => {
     fetchData();
-  }, [localStorage.getItem("user")]);
+  }, []);
 
-  // 🔥 FETCH USER-SPECIFIC DATA
+  // 🔥 FETCH DATA
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-
       if (!user) return;
-
-      setTransactions([]); // 🔥 CLEAR OLD DATA FIRST
 
       const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  // 🔥 ADD TRANSACTION WITH USER ID
+  // ➕ ADD
   const handleSubmit = async () => {
     if (!title || !amount || !category) {
       alert("Fill all fields");
@@ -58,9 +56,25 @@ const Home = () => {
       setAmount("");
       setCategory("");
 
-      fetchData(); // 🔥 REFRESH DATA
+      fetchData();
+
     } catch (error) {
-      console.error("ERROR:", error.response?.data || error.message);
+      console.error(error);
+    }
+  };
+
+  // ❌ DELETE
+  const handleDelete = async (id) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      await API.delete(`/transactions/${id}?userId=${user._id}`);
+
+      fetchData();
+
+    } catch (error) {
+      console.error(error);
+      alert("Delete failed ❌");
     }
   };
 
@@ -80,16 +94,12 @@ const Home = () => {
     <div className="container">
       <h1 className="title">✈️ Money Pilot</h1>
 
-      {/* MAIN CARD */}
       <div className="main-card">
-
-        {/* LEFT */}
         <div className="left">
           <p className="income">Income: ₹{income}</p>
           <p className="expense">Expense: ₹{expense}</p>
         </div>
 
-        {/* CENTER */}
         <div className="center">
           <div className="balance-box">
             <h1 className="balance">₹{balance}</h1>
@@ -97,12 +107,10 @@ const Home = () => {
           </div>
         </div>
 
-        {/* RIGHT */}
         <div className="right">
           <p>💰 Savings: ₹{savings}</p>
           <p>📊 Budget Left: ₹{budgetLeft}</p>
         </div>
-
       </div>
 
       {/* BUTTONS */}
