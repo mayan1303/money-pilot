@@ -1,15 +1,17 @@
 import User from "../models/User.js";
 
-// ✅ GET LOGGED-IN USER
+// ✅ GET LOGGED-IN USER (FIXED)
 export const getUser = async (req, res) => {
   try {
-    res.json(req.user); // from auth middleware
+    const user = await User.findById(req.user._id).select("-password");
+
+    res.json(user); // 🔥 now includes savings
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// ✅ UPDATE USERNAME
+// ✅ UPDATE USERNAME (FIXED RESPONSE)
 export const updateUser = async (req, res) => {
   try {
     const { username } = req.body;
@@ -18,21 +20,19 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: "Username is required" });
     }
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { username },
+      { new: true }
+    ).select("-password");
 
-    user.username = username;
-    await user.save();
-
-    res.json({
-      username: user.username,
-      email: user.email,
-    });
+    res.json(user); // 🔥 return full user (important)
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// ✅ UPDATE SAVINGS
+// ✅ UPDATE SAVINGS (FIXED)
 export const updateBudget = async (req, res) => {
   try {
     const { savings } = req.body;
@@ -41,12 +41,13 @@ export const updateBudget = async (req, res) => {
       return res.status(400).json({ message: "Savings value required" });
     }
 
-    const user = await User.findById(req.user._id);
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { savings: Number(savings) }, // 🔥 force number
+      { new: true }
+    ).select("-password");
 
-    user.savings = savings;
-    await user.save();
-
-    res.json({ savings: user.savings });
+    res.json(user); // 🔥 return full user
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

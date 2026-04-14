@@ -10,14 +10,13 @@ export const AppProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // 🔥 FETCH USER WITH USER ID
+  // ✅ CORRECT: NO userId in URL
   const fetchUser = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-
       if (!user) return;
 
-      const res = await API.get(`/user/${user._id}`); // ✅ FIXED
+      const res = await API.get("/user"); // 🔥 FIXED
 
       setSavings(res.data.savings || 0);
     } catch (err) {
@@ -25,19 +24,14 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // 🔥 UPDATE SAVINGS WITH USER ID
+  // ✅ CORRECT: NO userId needed
   const updateSavings = async (value) => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      if (!user) return;
-
       const res = await API.put("/user/budget", {
-  userId: user._id,
-  savings: Number(value),
-});
+        savings: Number(value), // 🔥 IMPORTANT
+      });
 
-      setSavings(res.data.savings);
+      setSavings(res.data.savings); // instant UI update
     } catch (err) {
       console.log("Update Savings Error:", err);
     }
