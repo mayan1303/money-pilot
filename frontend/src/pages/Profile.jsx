@@ -22,27 +22,51 @@ const Profile = () => {
     setInputSavings(savings);
   }, [savings]);
 
+  // 🔥 FIXED: USER-SPECIFIC DATA
   const fetchData = async () => {
-    const res = await API.get("/transactions");
-    setTransactions(res.data);
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) return;
+
+      const res = await API.get(`/transactions?userId=${user._id}`);
+      setTransactions(res.data);
+
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const fetchUser = async () => {
-    const res = await API.get("/user");
-    setUserData(res.data);
-    setNewName(res.data.username);
+  // 🔥 FIXED: GET USER FROM LOCALSTORAGE (FASTER + SAFE)
+  const fetchUser = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) return;
+
+    setUserData(user);
+    setNewName(user.username);
   };
 
   const handleNameUpdate = async () => {
     try {
-      await API.put("/user/update", { username: newName });
-      setUserData({ ...userData, username: newName });
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const res = await API.put("/user/update", {
+        userId: user._id,
+        username: newName,
+      });
+
+      localStorage.setItem("user", JSON.stringify(res.data));
+
+      setUserData(res.data);
       setEdit(false);
+
     } catch {
       alert("Update failed ❌");
     }
   };
 
+  // 📊 CALCULATIONS
   const income = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);
@@ -64,7 +88,7 @@ const Profile = () => {
 
       <h1 className="page-title">Profile</h1>
 
-      {/* 🔥 PREMIUM PROFILE CARD */}
+      {/* PROFILE CARD */}
       <div className="profile-card glass">
         <div className="profile-left">
           <span className="avatar">👤</span>
@@ -94,7 +118,7 @@ const Profile = () => {
         )}
       </div>
 
-      {/* 💰 SAVINGS */}
+      {/* SAVINGS */}
       <div className="savings-card">
         <div>
           <h3>💰 Savings Goal</h3>
@@ -111,7 +135,7 @@ const Profile = () => {
         <h2>₹{savings}</h2>
       </div>
 
-      {/* 📊 STATS */}
+      {/* STATS */}
       <div className="stats-grid">
 
         <div className="card income hover">
