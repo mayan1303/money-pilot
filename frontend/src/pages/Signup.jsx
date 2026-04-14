@@ -15,7 +15,20 @@ const Signup = () => {
         password,
       });
 
+      // 🔥 CLEAR OLD DATA (IMPORTANT)
+      localStorage.removeItem("transactions");
+      localStorage.removeItem("income");
+      localStorage.removeItem("expense");
+
+      // ✅ SAVE NEW USER
       localStorage.setItem("user", JSON.stringify(res.data));
+
+      // ✅ RESET INPUTS (optional but good)
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
+      // 🚀 REDIRECT TO HOME
       window.location.href = "/";
     } catch {
       alert("Signup failed ❌");
@@ -31,17 +44,20 @@ const Signup = () => {
 
         <input
           placeholder="Username"
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
 
         <input
           placeholder="Email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
