@@ -1,19 +1,42 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "./Auth.css";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    try {
-      const res = await API.post("/auth/login", { email, password });
+    // 🔴 validation
+    if (!email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
 
+    try {
+      setLoading(true);
+
+      // 🧹 CLEAR OLD DATA (VERY IMPORTANT FIX)
+      localStorage.removeItem("user");
+
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
+
+      // ✅ SAVE NEW USER
       localStorage.setItem("user", JSON.stringify(res.data));
-      window.location.href = "/";
-    } catch {
-      alert("Invalid credentials ❌");
+
+      // 🔄 redirect
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || "Invalid credentials ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,12 +56,15 @@ const Login = () => {
         <input
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLogin} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        <p onClick={() => (window.location.href = "/signup")}>
+        <p onClick={() => navigate("/signup")}>
           Don’t have an account? Signup
         </p>
       </div>

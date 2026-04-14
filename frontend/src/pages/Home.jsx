@@ -14,9 +14,10 @@ const Home = () => {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
+  // 🔥 RUN WHEN USER CHANGES
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [localStorage.getItem("user")]);
 
   // 🔥 FETCH USER-SPECIFIC DATA
   const fetchData = async () => {
@@ -24,6 +25,8 @@ const Home = () => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       if (!user) return;
+
+      setTransactions([]); // 🔥 CLEAR OLD DATA FIRST
 
       const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
@@ -47,7 +50,7 @@ const Home = () => {
         amount: Number(amount),
         category,
         type,
-        userId: user._id, // 🔥 IMPORTANT
+        userId: user._id,
       });
 
       setShowForm(false);
@@ -55,7 +58,7 @@ const Home = () => {
       setAmount("");
       setCategory("");
 
-      fetchData();
+      fetchData(); // 🔥 REFRESH DATA
     } catch (error) {
       console.error("ERROR:", error.response?.data || error.message);
     }

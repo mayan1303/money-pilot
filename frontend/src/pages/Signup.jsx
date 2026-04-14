@@ -1,37 +1,49 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "./Auth.css";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
+    // 🔴 validation
+    if (!username || !email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
+      setLoading(true);
+
+      // 🧹 CLEAR OLD USER (IMPORTANT FIX)
+      localStorage.removeItem("user");
+
       const res = await API.post("/auth/signup", {
         username,
         email,
         password,
       });
 
-      // 🔥 CLEAR OLD DATA (IMPORTANT)
-      localStorage.removeItem("transactions");
-      localStorage.removeItem("income");
-      localStorage.removeItem("expense");
-
       // ✅ SAVE NEW USER
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      // ✅ RESET INPUTS (optional but good)
+      // 🧼 reset fields
       setUsername("");
       setEmail("");
       setPassword("");
 
-      // 🚀 REDIRECT TO HOME
-      window.location.href = "/";
-    } catch {
-      alert("Signup failed ❌");
+      // 🚀 redirect (no reload)
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || "Signup failed ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,9 +73,11 @@ const Signup = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button onClick={handleSignup}>Signup</button>
+        <button onClick={handleSignup} disabled={loading}>
+          {loading ? "Creating..." : "Signup"}
+        </button>
 
-        <p onClick={() => (window.location.href = "/login")}>
+        <p onClick={() => navigate("/login")}>
           Already have an account? Login
         </p>
       </div>
