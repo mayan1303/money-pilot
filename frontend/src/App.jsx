@@ -6,25 +6,24 @@ import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
-import PrivateRoute from "./components/PrivateRoute"; // ✅ IMPORTANT
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* 🔐 PROTECTED ROUTES */}
+        {/* Protected */}
         <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/transactions" element={<PrivateRoute><Transactions /></PrivateRoute>} />
         <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
-        {/* 🌐 PUBLIC ROUTES */}
+        {/* Public */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* ⚠️ FALLBACK ROUTE (VERY IMPORTANT) */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" />} />
 
       </Routes>
