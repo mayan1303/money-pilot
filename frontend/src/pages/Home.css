@@ -201,3 +201,41 @@
 .main-card * {
   border-bottom: none !important;
 }
+
+/* 📱 MOBILE RESPONSIVE FIX */
+@media (max-width: 768px) {
+
+  .main-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .left,
+  .right,
+  .center {
+    width: 100%;
+    text-align: center;
+    align-items: center;
+  }
+
+  .left,
+  .right {
+    flex-direction: column;
+  }
+
+  .balance {
+    font-size: 36px;
+  }
+
+  .btn-group {
+    width: 90%;
+  }
+
+  .income-btn,
+  .expense-btn {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
