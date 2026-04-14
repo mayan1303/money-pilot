@@ -1,15 +1,17 @@
 import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-  let user = null;
-
   try {
-    user = JSON.parse(localStorage.getItem("user"));
-  } catch (err) {
-    user = null;
-  }
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  return user ? children : <Navigate to="/login" />;
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  } catch (error) {
+    return <Navigate to="/login" replace />;
+  }
 };
 
 export default PrivateRoute;

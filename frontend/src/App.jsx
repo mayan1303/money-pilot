@@ -6,7 +6,8 @@ import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import PrivateRoute from "./components/PrivateRoute";
+
+import PrivateRoute from "./components/PrivateRoute"; // ✅ IMPORTANT
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* 🔁 FALLBACK */}
+        {/* ⚠️ FALLBACK ROUTE (VERY IMPORTANT) */}
         <Route path="*" element={<Navigate to="/login" />} />
 
       </Routes>
