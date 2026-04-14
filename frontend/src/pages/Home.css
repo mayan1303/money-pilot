@@ -202,14 +202,23 @@
   border-bottom: none !important;
 }
 
-/* 📱 MOBILE RESPONSIVE FIX */
+/* 📱 FINAL MOBILE FIX */
 @media (max-width: 768px) {
+
+  .container {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 26px;
+    padding: 15px 0;
+  }
 
   .main-card {
     flex-direction: column;
-    text-align: center;
-    gap: 20px;
+    gap: 15px;
     padding: 20px;
+    border-radius: 16px;
   }
 
   .left,
@@ -217,25 +226,48 @@
   .center {
     width: 100%;
     text-align: center;
-    align-items: center;
   }
 
-  .left,
-  .right {
-    flex-direction: column;
+  .left p,
+  .right p {
+    font-size: 14px;
+    margin: 5px 0;
   }
 
   .balance {
-    font-size: 36px;
+    font-size: 32px;
   }
 
+  .label {
+    font-size: 12px;
+  }
+
+  /* 🔥 BUTTON FIX */
   .btn-group {
-    width: 90%;
+    width: 100%;
+    padding: 0 5px;
   }
 
   .income-btn,
   .expense-btn {
-    font-size: 15px;
+    width: 100%;
     padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* 🔥 POPUP FIX */
+  .form {
+    width: 95%;
+    max-width: 300px;
+    padding: 20px;
+  }
+
+  /* 🔥 NAVBAR FIX */
+  .navbar {
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 8px;
   }
 }
