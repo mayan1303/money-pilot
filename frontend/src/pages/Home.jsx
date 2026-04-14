@@ -18,15 +18,21 @@ const Home = () => {
     fetchData();
   }, []);
 
+  // 🔥 FETCH USER-SPECIFIC DATA
   const fetchData = async () => {
     try {
-      const res = await API.get("/transactions");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) return;
+
+      const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // 🔥 ADD TRANSACTION WITH USER ID
   const handleSubmit = async () => {
     if (!title || !amount || !category) {
       alert("Fill all fields");
@@ -34,11 +40,14 @@ const Home = () => {
     }
 
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
       await API.post("/transactions", {
         title,
         amount: Number(amount),
         category,
         type,
+        userId: user._id, // 🔥 IMPORTANT
       });
 
       setShowForm(false);
@@ -52,6 +61,7 @@ const Home = () => {
     }
   };
 
+  // 📊 CALCULATIONS
   const income = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);
@@ -76,7 +86,7 @@ const Home = () => {
           <p className="expense">Expense: ₹{expense}</p>
         </div>
 
-        {/* CENTER (FIXED) */}
+        {/* CENTER */}
         <div className="center">
           <div className="balance-box">
             <h1 className="balance">₹{balance}</h1>
@@ -155,8 +165,6 @@ const Home = () => {
                   <option>Travel</option>
                   <option>Shopping</option>
                   <option>Entertainment</option>
-
-                  {/* NEW */}
                   <option>Health</option>
                   <option>Education</option>
                   <option>Bills</option>
