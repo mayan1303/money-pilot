@@ -32,9 +32,10 @@ export const AppProvider = ({ children }) => {
 
       if (!user) return;
 
-      const res = await API.put(`/user/budget/${user._id}`, {
-        savings: Number(value),
-      }); // ✅ FIXED
+      const res = await API.put("/user/budget", {
+  userId: user._id,
+  savings: Number(value),
+});
 
       setSavings(res.data.savings);
     } catch (err) {

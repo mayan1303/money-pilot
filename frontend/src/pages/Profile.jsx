@@ -12,6 +12,7 @@ const Profile = () => {
   const [newName, setNewName] = useState("");
   const [inputSavings, setInputSavings] = useState("");
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -22,31 +23,29 @@ const Profile = () => {
     setInputSavings(savings);
   }, [savings]);
 
-  // 🔥 FIXED: USER-SPECIFIC DATA
+  // ✅ FETCH USER TRANSACTIONS
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-
       if (!user) return;
 
       const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
-
     } catch (err) {
       console.error(err);
     }
   };
 
-  // 🔥 FIXED: GET USER FROM LOCALSTORAGE (FASTER + SAFE)
+  // ✅ FETCH USER FROM LOCAL STORAGE
   const fetchUser = () => {
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user) return;
 
     setUserData(user);
     setNewName(user.username);
   };
 
+  // ✅ UPDATE NAME
   const handleNameUpdate = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -57,7 +56,6 @@ const Profile = () => {
       });
 
       localStorage.setItem("user", JSON.stringify(res.data));
-
       setUserData(res.data);
       setEdit(false);
 
@@ -78,9 +76,23 @@ const Profile = () => {
   const balance = income - expense;
   const budgetLeft = balance - savings;
 
+  // ✅ FIXED SAVE FUNCTION
   const handleSave = async () => {
     if (!inputSavings) return;
-    await updateSavings(inputSavings);
+
+    try {
+      setLoading(true);
+
+      await updateSavings(Number(inputSavings)); // 🔥 IMPORTANT FIX
+
+      alert("Savings updated ✅"); // optional feedback
+
+    } catch (err) {
+      console.error(err);
+      alert("Update failed ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -122,13 +134,17 @@ const Profile = () => {
       <div className="savings-card">
         <div>
           <h3>💰 Savings Goal</h3>
+
           <div className="savings-input">
             <input
               type="number"
               value={inputSavings}
               onChange={(e) => setInputSavings(e.target.value)}
             />
-            <button onClick={handleSave}>Update</button>
+
+            <button onClick={handleSave} disabled={loading}>
+              {loading ? "Updating..." : "Update"}
+            </button>
           </div>
         </div>
 
