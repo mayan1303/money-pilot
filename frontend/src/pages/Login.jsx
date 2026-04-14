@@ -11,7 +11,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    // 🔴 validation
     if (!email || !password) {
       alert("Please fill all fields");
       return;
@@ -20,8 +19,10 @@ const Login = () => {
     try {
       setLoading(true);
 
-      // 🧹 CLEAR OLD DATA (VERY IMPORTANT FIX)
+      // 🔥 CLEAR ALL OLD USER DATA (VERY IMPORTANT)
       localStorage.removeItem("user");
+      localStorage.removeItem("savings");
+      localStorage.removeItem("transactions");
 
       const res = await API.post("/auth/login", {
         email,
@@ -31,8 +32,12 @@ const Login = () => {
       // ✅ SAVE NEW USER
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      // 🔄 redirect
-      navigate("/");
+      // 🔥 OPTIONAL: force reload to reset state cleanly
+      window.location.href = "/";
+
+      // OR use navigate if you prefer (but reload is safer here)
+      // navigate("/");
+      
     } catch (err) {
       alert(err.response?.data?.message || "Invalid credentials ❌");
     } finally {

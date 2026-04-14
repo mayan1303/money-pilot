@@ -14,7 +14,8 @@ const Transactions = () => {
 
   const fetchData = async () => {
     try {
-      const res = await API.get("/transactions");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
     } catch (error) {
       console.error(error);

@@ -6,29 +6,39 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [savings, setSavings] = useState(0);
 
-  // ✅ fetch user (not /savings now)
   useEffect(() => {
     fetchUser();
   }, []);
 
+  // 🔥 FETCH USER WITH USER ID
   const fetchUser = async () => {
     try {
-      const res = await API.get("/user");
-      setSavings(res.data.savings);
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) return;
+
+      const res = await API.get(`/user/${user._id}`); // ✅ FIXED
+
+      setSavings(res.data.savings || 0);
     } catch (err) {
-      console.log(err);
+      console.log("Fetch User Error:", err);
     }
   };
 
-  // ✅ update via /budget
+  // 🔥 UPDATE SAVINGS WITH USER ID
   const updateSavings = async (value) => {
     try {
-      const res = await API.put("/user/budget", {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) return;
+
+      const res = await API.put(`/user/budget/${user._id}`, {
         savings: Number(value),
-      });
+      }); // ✅ FIXED
+
       setSavings(res.data.savings);
     } catch (err) {
-      console.log(err);
+      console.log("Update Savings Error:", err);
     }
   };
 

@@ -12,7 +12,6 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
-    // 🔴 validation
     if (!username || !email || !password) {
       alert("Please fill all fields");
       return;
@@ -21,8 +20,10 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      // 🧹 CLEAR OLD USER (IMPORTANT FIX)
+      // 🔥 CLEAR ALL OLD DATA (VERY IMPORTANT)
       localStorage.removeItem("user");
+      localStorage.removeItem("savings");
+      localStorage.removeItem("transactions");
 
       const res = await API.post("/auth/signup", {
         username,
@@ -38,8 +39,12 @@ const Signup = () => {
       setEmail("");
       setPassword("");
 
-      // 🚀 redirect (no reload)
-      navigate("/");
+      // 🔥 FORCE CLEAN LOAD (prevents stale state bugs)
+      window.location.href = "/";
+
+      // OR:
+      // navigate("/");
+
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed ❌");
     } finally {
