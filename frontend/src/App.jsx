@@ -6,28 +6,25 @@ import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
-// 🔐 check login
-const PrivateRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  return user ? children : <Navigate to="/login" />;
-};
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* 🔐 PROTECTED */}
+        {/* 🔐 PROTECTED ROUTES */}
         <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/transactions" element={<PrivateRoute><Transactions /></PrivateRoute>} />
         <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
-        {/* PUBLIC */}
+        {/* 🌐 PUBLIC ROUTES */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        {/* 🔁 FALLBACK */}
+        <Route path="*" element={<Navigate to="/login" />} />
 
       </Routes>
     </BrowserRouter>
