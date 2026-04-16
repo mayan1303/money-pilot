@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://money-pilot-backend.onrender.com/api",
+  baseURL: "https://money-pilot-eb6k.onrender.com/api",
 });
 
 // 🔐 Attach token automatically
