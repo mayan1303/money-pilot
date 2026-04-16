@@ -36,6 +36,24 @@ const corsOptions = {
 };
 
 // 🔥 MIDDLEWARE
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const isAllowedVercelOrigin = origin?.endsWith(".vercel.app");
+
+  if (!origin || allowedOrigins.includes(origin) || isAllowedVercelOrigin) {
+    res.header("Access-Control-Allow-Origin", origin || "*");
+    res.header("Vary", "Origin");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  return next();
+});
+
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(express.json());
