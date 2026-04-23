@@ -14,12 +14,10 @@ const Home = () => {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
-  // ✅ RUN ON PAGE LOAD
   useEffect(() => {
     fetchData();
   }, []);
 
-  // 🔥 FETCH DATA
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -27,16 +25,21 @@ const Home = () => {
 
       const res = await API.get(`/transactions?userId=${user._id}`);
       setTransactions(res.data);
-
     } catch (error) {
       console.error(error);
     }
   };
 
-  // ➕ ADD
   const handleSubmit = async () => {
     if (!title || !amount || !category) {
       alert("Fill all fields");
+      return;
+    }
+
+    const numericAmount = Number(amount);
+
+    if (type === "expense" && numericAmount > budgetLeft) {
+      alert("You\u2019re going over budget, boss \u26a0\ufe0f");
       return;
     }
 
@@ -45,7 +48,7 @@ const Home = () => {
 
       await API.post("/transactions", {
         title,
-        amount: Number(amount),
+        amount: numericAmount,
         category,
         type,
         userId: user._id,
@@ -57,13 +60,12 @@ const Home = () => {
       setCategory("");
 
       fetchData();
-
     } catch (error) {
       console.error(error);
+      alert(error.response?.data?.message || "Failed to save transaction");
     }
   };
 
-  // ❌ DELETE
   const handleDelete = async (id) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -71,14 +73,12 @@ const Home = () => {
       await API.delete(`/transactions/${id}?userId=${user._id}`);
 
       fetchData();
-
     } catch (error) {
       console.error(error);
       alert("Delete failed ❌");
     }
   };
 
-  // 📊 CALCULATIONS
   const income = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);
@@ -113,7 +113,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* BUTTONS */}
       <div className="btn-group">
         <button
           className="income-btn"
@@ -136,7 +135,6 @@ const Home = () => {
         </button>
       </div>
 
-      {/* POPUP */}
       {showForm && (
         <div className="popup">
           <div className="form">
